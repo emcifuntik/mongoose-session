@@ -1,6 +1,6 @@
 # mongoose-session
 
-Express 4.0 Middleware for MongoDB Session Storage using the Mongoose ODM
+Express 4 Middleware for MongoDB Session Storage using the Mongoose ODM
 
 ## Installation
 
@@ -20,6 +20,12 @@ Express 4.0 Middleware for MongoDB Session Storage using the Mongoose ODM
         secret: 'SUPER SECRET SECRET',
         store: require('mongoose-session')(mongoose)
     }));
+
+## Options
+
+mongoose-session accepts options as a second parameters.
+
+* `options.ttl` : allowed time of inactivity before a session is destroyed, in seconds (3600)
     
 ## Info
 

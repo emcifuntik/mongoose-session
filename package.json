@@ -1,6 +1,6 @@
 {
     "name": "mongoose-session",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Chance Dickson <chance@chardev.se> (http://chardev.se)",
     "main": "./index.js",
     "repository": {
@@ -8,7 +8,6 @@
         "url": "git://github.com/TheRealCharDev/mongoose-session.git"
     },
     "dependencies": {
-        "mongoose": "3.8.8",
-        "express-session": "1.0.2"
+        "express-session": "~1.7.6"
     }
 }
