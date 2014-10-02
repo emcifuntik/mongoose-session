@@ -12,7 +12,7 @@ var MongooseSession = function (mongoose, options) {
     this.mongoose = mongoose;
 
     var sessionSchema = new mongoose.Schema({
-        sid: String,
+        _id: String,
         session: mongoose.Schema.Types.Mixed,
         createdAt: (options.ttl ? { type: Date, expires: options.ttl } : Date)
     });
@@ -22,7 +22,7 @@ var MongooseSession = function (mongoose, options) {
     this.get = function(sid, callback) {
         callback = callback || function() {};
         var self = this;
-        self.SessionModel.findOne({ sid: sid })
+        self.SessionModel.findOne({ _id: sid })
             .exec(function(err, results) {
                 if (err) {
                     console.error(err);
@@ -40,8 +40,8 @@ var MongooseSession = function (mongoose, options) {
         callback = callback || function() {};
         var self = this;
         self.SessionModel.update(
-            { sid: sid },
-            { sid: sid, session: session, createdAt: new Date() },
+            { _id: sid },
+            { _id: sid, session: session, createdAt: new Date() },
             { upsert: true },
             function(err) {
                 if (err) {
@@ -55,7 +55,7 @@ var MongooseSession = function (mongoose, options) {
     this.destroy = function(sid, callback) {
         callback = callback || function() {};
         var self = this;
-        self.SessionModel.remove({ sid: sid })
+        self.SessionModel.remove({ _id: sid })
             .exec(function(err, results) {
                 if (err) {
                     console.error(err);
