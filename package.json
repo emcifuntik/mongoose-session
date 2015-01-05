@@ -1,11 +1,11 @@
 {
     "name": "mongoose-session",
     "version": "0.0.3",
-    "author": "Chance Dickson <chance@chardev.se> (http://chardev.se)",
+    "author": "Chance Dickson <me@chncdcksn.com> (http://chncdcksn.com)",
     "main": "./index.js",
     "repository": {
         "type": "git",
-        "url": "git://github.com/TheRealCharDev/mongoose-session.git"
+        "url": "git://github.com/chncdcksn/mongoose-session.git"
     },
     "dependencies": {
         "express-session": "~1.8.2"
