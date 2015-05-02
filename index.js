@@ -93,6 +93,6 @@ var MongooseSession = function (mongoose, options) {
     };
 };
 
-module.exports = function(mongoose, options) {
+module.exports = require("util").deprecate(function(mongoose, options) {
     return new MongooseSession(mongoose, options);
-};
+}, "mongoose-session is inactive and should not be considered secure or production ready. Please use connect-mongo instead.");

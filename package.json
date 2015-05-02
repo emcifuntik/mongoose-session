@@ -1,8 +1,9 @@
 {
     "name": "mongoose-session",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "author": "Chance Dickson <me@chncdcksn.com> (http://chncdcksn.com)",
     "main": "./index.js",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "git://github.com/chncdcksn/mongoose-session.git"
