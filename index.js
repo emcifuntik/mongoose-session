@@ -1,98 +1,114 @@
-var MongooseSession = function (mongoose, options) {
+const Store = require('express-session').Store;
 
-    /** Default options **/
-
+class MongooseSession extends Store {
+  constructor(mongoose, options) {
     options = options || {};
-    options.modelName = options.modelName || 'Session';
-    options.ttl = options.ttl || 3600;
+    options.modelName = options.modelName || 'session';
+    options.ttl = options.ttl || 1209600;
 
-    /** Inherits express session prototype store **/
-
-    this.__proto__ = (require('express-session').Store).prototype;
     this.mongoose = mongoose;
 
-    var sessionSchema = new mongoose.Schema({
-        _id: String,
-        session: mongoose.Schema.Types.Mixed,
-        createdAt: (options.ttl ? { type: Date, expires: options.ttl } : Date)
+    const sessionSchema = new mongoose.Schema({
+      _id: String,
+      session: mongoose.Schema.Types.Mixed,
+      createdAt: {
+        type: Date
+      },
+      expires: {
+        type: Date
+      }
     });
 
     this.SessionModel = mongoose.model(options.modelName, sessionSchema);
+  }
 
-    this.get = function(sid, callback) {
-        callback = callback || function() {};
-        var self = this;
-        self.SessionModel.findOne({ _id: sid })
-            .exec(function(err, results) {
-                if (err) {
-                    console.error(err);
-                    callback(err);
-                } else {
-                    if (results) {
-                        callback(null, results.session);
-                    } else {
-                        callback(null);
-                    }
-                }
-            });
-    };
-    this.set = function(sid, session, callback) {
-        callback = callback || function() {};
-        var self = this;
-        self.SessionModel.update(
-            { _id: sid },
-            { _id: sid, session: session, createdAt: new Date() },
-            { upsert: true },
-            function(err) {
-                if (err) {
-                    console.error(err);
-                    callback(err);
-                } else {
-                    callback(null);
-                }
-            });
-    };
-    this.destroy = function(sid, callback) {
-        callback = callback || function() {};
-        var self = this;
-        self.SessionModel.remove({ _id: sid })
-            .exec(function(err, results) {
-                if (err) {
-                    console.error(err);
-                    callback(err);
-                } else {
-                    callback(null);
-                }
-            });
-    };
-    this.length = function(callback) {
-        callback = callback || function() {};
-        var self = this;
-        self.SessionModel.find()
-            .exec(function(err, results) {
-                if (err) {
-                    console.error(err);
-                    callback(err);
-                } else {
-                    callback(null, results.length);
-                }
-            });
-    };
-    this.clear = function(callback) {
-        callback = callback || function() {};
-        var self = this;
-        self.SessionModel.remove()
-            .exec(function(err, results) {
-                if (err) {
-                    console.error(err);
-                    callback(err);
-                } else {
-                    callback(null);
-                }
-            });
-    };
-};
+  get(sid, callback) {
+    callback = callback || (() => {});
+    this.SessionModel.findOne({
+        _id: sid
+      })
+      .exec((err, results) => {
+        if (err) {
+          if (callback)
+            callback(err);
+        } else {
+          if (results) {
+            if (callback)
+              callback(null, results.session);
+          } else {
+            if (callback)
+              callback(null);
+          }
+        }
+      });
+  }
 
-module.exports = require("util").deprecate(function(mongoose, options) {
-    return new MongooseSession(mongoose, options);
-}, "mongoose-session is inactive and should not be considered secure or production ready. Please use connect-mongo instead.");
+  set(sid, session, callback) {
+    let self = this;
+    self.SessionModel.update({
+        _id: sid
+      }, {
+        _id: sid,
+        session: session,
+        createdAt: new Date()
+      }, {
+        upsert: true
+      },
+      (err) => {
+        if (err) {
+          console.error(err);
+          if (callback)
+            callback(err);
+        } else {
+          if (callback)
+            callback(null);
+        }
+      });
+  }
+
+  destroy(sid, callback) {
+    this.SessionModel
+    .remove({
+      _id: sid
+    })
+    .exec((err, results) => {
+      if (err) {
+        if (callback)
+          callback(err);
+      } else {
+        if (callback)
+          callback(null);
+      }
+    });
+  }
+
+  length(callback) {
+    this.SessionModel
+    .find()
+    .exec((err, results) => {
+      if (err) {
+        console.error(err);
+        if(callback)
+          callback(err);
+      } else {
+        if(callback)
+          callback(null, results.length);
+      }
+    });
+  }
+
+  clear(callback) {
+    let self = this;
+    self.SessionModel
+    .remove()
+    .exec((err, results) => {
+      if (err) {
+        if (callback)
+          callback(err);
+      } else {
+        if (callback)
+          callback(null);
+      }
+    });
+  };
+}
