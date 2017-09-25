@@ -1,6 +1,6 @@
 # mongoose-session2
 
-Express 4 Middleware for MongoDB Session Storage using the Mongoose ODM
+Express 5 Middleware for MongoDB Session Storage using the Mongoose ODM
 
 ## Installation
 ```bash

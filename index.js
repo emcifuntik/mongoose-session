@@ -18,52 +18,49 @@ class MongooseSession extends Store {
         type: Date
       }
     });
-
     this.SessionModel = mongoose.model(options.modelName, sessionSchema);
   }
 
   get(sid, callback) {
-    callback = callback || (() => {});
     this.SessionModel.findOne({
-        _id: sid
-      })
-      .exec((err, results) => {
-        if (err) {
+      _id: sid
+    })
+    .exec((err, results) => {
+      if (err) {
+        if (callback)
+          callback(err);
+      } else {
+        if (results) {
           if (callback)
-            callback(err);
-        } else {
-          if (results) {
-            if (callback)
-              callback(null, results.session);
-          } else {
-            if (callback)
-              callback(null);
-          }
-        }
-      });
-  }
-
-  set(sid, session, callback) {
-    let self = this;
-    self.SessionModel.update({
-        _id: sid
-      }, {
-        _id: sid,
-        session: session,
-        createdAt: new Date()
-      }, {
-        upsert: true
-      },
-      (err) => {
-        if (err) {
-          console.error(err);
-          if (callback)
-            callback(err);
+            callback(null, results.session);
         } else {
           if (callback)
             callback(null);
         }
-      });
+      }
+    });
+  }
+
+  set(sid, session, callback) {
+    this.SessionModel.update({
+      _id: sid
+    }, {
+      _id: sid,
+      session: session,
+      createdAt: new Date()
+    }, {
+      upsert: true
+    },
+    (err) => {
+      if (err) {
+        console.error(err);
+        if (callback)
+          callback(err);
+      } else {
+        if (callback)
+          callback(null);
+      }
+    });
   }
 
   destroy(sid, callback) {
@@ -98,8 +95,7 @@ class MongooseSession extends Store {
   }
 
   clear(callback) {
-    let self = this;
-    self.SessionModel
+    this.SessionModel
     .remove()
     .exec((err, results) => {
       if (err) {
