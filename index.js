@@ -108,3 +108,5 @@ class MongooseSession extends Store {
     });
   };
 }
+
+module.exports = MongooseSession;
